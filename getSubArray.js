@@ -6,14 +6,18 @@ function base64TOutf8(base64Str) {
 }
 
 // 获取订阅内容，返回包含节点对象的数组
-async function getSubArray(url) {
-  return await axios.get(url).then(res =>
-    base64TOutf8(res.data)
-      .replace(/\r\n/g, '')
+async function getSubArray(url, add) {
+  return await axios({
+    url,
+    method: 'get',
+    timeout: 5000
+  }).then(res => {
+    const vmessStr = (add.replace(/,/g, '\r\n') + base64TOutf8(res.data)).replace(/\r\n/g, '')
+    return vmessStr
       .split('vmess://')
       .filter(item => item.length !== 0)
       .map(item => JSON.parse(base64TOutf8(item), null, '  '))
-  )
+  })
 }
 
 module.exports = getSubArray

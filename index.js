@@ -10,7 +10,7 @@ const app = express()
 app.get('/', function (request, response) {
   const queryMap = getUrlQueryMap(decodeURI(request.url))
   if (queryMap.has('url')) {
-    getSubArray(queryMap.get('url'))
+    getSubArray(queryMap.get('url'), queryMap.has('add') ? queryMap.get('add') : '')
       .then(res => {
         // 转换文件
         const result = mixin({
@@ -26,9 +26,12 @@ app.get('/', function (request, response) {
         )
         response.download('config.yaml')
       })
-      .catch(console.log)
+      .catch(err => {
+        response.send(`<h1 align="center">${queryMap.get('url')}<br/>订阅下载超时！</h1>`)
+        response.end()
+      })
   } else {
-    response.write(request.url)
+    response.send('<h1 align="center">地址错误，query中未找到 url 参数</h1>')
     response.end()
   }
 })
