@@ -1,20 +1,24 @@
 # clash-sub
 
+**只支持 vmess 的 ws 节点，其他本人不用，没做。**
+
 ### 安装
 
 ```
+git clone https://github.com/Flysky12138/clash-sub.git
+cd clash-sub
 yarn
 node index
 ```
 
 ### 使用
 
-> 在 Clash 客户端中，按照如下形式填写订阅地址订阅即可。  
-> http://127.0.0.1:666/?url=https://aa.com&ruleType=0&host=ltetp.tv189.com
+> 在 Clash 客户端中，按照如下形式填写订阅地址，订阅即可。  
+> http://127.0.0.1:666/?url=https://xxx&ruleType=0&host=xxx
 
-`url` Clash 订阅地址
+`url` Clash 订阅地址，多个用`,`隔开。
 
-> url=https://aa.com
+> url=http://xxx,https://xxx
 
 `ruleType` 代理模式
 
@@ -28,8 +32,8 @@ node index
 
 `host`
 
-> host=ltetp.tv189.com
+> host=xxx
 
-`add` 在所有节点前添加一个或多个节点，用`,`隔开。
+`add` 在最前添加额外节点，多个用`,`隔开。
 
 > add=vmess://sgIUSVOjdbsdb,vmess://UVIbaswPsvnsdo
