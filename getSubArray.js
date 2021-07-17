@@ -16,19 +16,24 @@ async function once(url) {
 
 // 获取订阅内容，返回包含节点对象的数组
 async function getSubArray(url, add) {
-  let [funcHttp, vmessLists] = [[], [...add.split(',')]]
+  let [funcHttp, vmessArrayStr] = [[], [...add.split(',')]]
   // 创建包含请求方法的数组
   url.split(',').forEach(element => funcHttp.push(once(element)))
   // 多订阅同时请求
   return await axios.all(funcHttp).then(res => {
-    // vmess节点链接放入vmessLists数组中
+    // vmess节点链接放入vmessArrayStr数组中
     res.forEach(element => {
       base64TOutf8(element.data)
         .replace(/\r\n/g, ',')
         .split(',')
-        .forEach(element => vmessLists.push(element))
+        .forEach(element => vmessArrayStr.push(element))
     })
-    return vmessLists.filter(item => item.length !== 0).map(item => JSON.parse(base64TOutf8(item.replace('vmess://', '')), null, '  '))
+    // 将vmess节点链接转换成JSON对象
+    const vmessArrayObj = vmessArrayStr.filter(item => item.length !== 0).map(item => JSON.parse(base64TOutf8(item.replace('vmess://', '')), null, '  '))
+    // 过滤重复名
+    let reslut = []
+    vmessArrayObj.forEach(element => reslut.findIndex(item => item.ps === element.ps) === -1 && reslut.push(element))
+    return reslut
   })
 }
 
