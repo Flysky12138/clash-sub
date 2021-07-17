@@ -23,11 +23,11 @@ app.get('/', function (request, response) {
         response.end()
       })
       .catch(err => {
-        response.send(`<h1 align="center">${queryMap.get('url')}<br/>订阅下载超时！</h1>`)
+        response.send(`<h1 align="center"><br/>订阅下载超时！<br/>${err}</h1>`)
         response.end()
       })
   } else {
-    response.send('<h1 align="center">地址错误，query中未找到 url 参数</h1>')
+    response.send('<h1 align="center"><br/>地址错误，query中未找到 url 参数</h1>')
     response.end()
   }
 })
