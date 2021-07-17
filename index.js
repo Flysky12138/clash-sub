@@ -1,11 +1,10 @@
 const getUrlQueryMap = require('./getUrlQueryMap')
 const getSubArray = require('./getSubArray')
 const mixin = require('./mixin/index')
-const fs = require('fs')
 const YAML = require('yaml')
 const express = require('express')
 
-// 建立下载链接
+// 建立链接
 const app = express()
 app.get('/', function (request, response) {
   const queryMap = getUrlQueryMap(decodeURI(request.url))
@@ -19,12 +18,9 @@ app.get('/', function (request, response) {
           filter: queryMap.has('filter') ? queryMap.get('filter') : '.',
           host: queryMap.has('host') ? queryMap.get('host') : 'ltetp.tv189.com'
         })
-        // 保存文件
-        fs.writeFileSync(
-          './config.yaml',
-          YAML.stringify(result, null, '  ').replace(/(dns:\n  |proxies:\n  -|proxy-groups:\n  -|rule-providers:\n  |rules:\n  -)/gi, '\n$1')
-        )
-        response.download('config.yaml')
+        // 发送文件
+        response.send(YAML.stringify(result, null, '  ').replace(/(dns:\n  |proxies:\n  -|proxy-groups:\n  -|rule-providers:\n  |rules:\n  -)/gi, '\n$1'))
+        response.end()
       })
       .catch(err => {
         response.send(`<h1 align="center">${queryMap.get('url')}<br/>订阅下载超时！</h1>`)
@@ -35,6 +31,7 @@ app.get('/', function (request, response) {
     response.end()
   }
 })
+
 // 监听端口
 app.listen(666, function () {
   console.log('Server running at http://127.0.0.1:666/')
