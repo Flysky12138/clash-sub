@@ -82,13 +82,13 @@
                   </v-col>
                 </v-row>
               </v-card-text>
+              <v-snackbar v-model="snackbar" timeout="6000" shaped class="mt-2" light transition="slide-y-transition" absolute top>
+                <span class="font-weight-bold">复制成功</span>
+                <template v-slot:action="{ attrs }">
+                  <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"> Close </v-btn>
+                </template>
+              </v-snackbar>
             </v-card>
-            <v-snackbar v-model="snackbar" timeout="6000" shaped class="mt-10" light transition="slide-y-transition" absolute top>
-              <span class="font-weight-bold">复制成功</span>
-              <template v-slot:action="{ attrs }">
-                <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"> Close </v-btn>
-              </template>
-            </v-snackbar>
           </v-container>
         </v-main>
       </v-app>
@@ -106,21 +106,13 @@
           labels: ['全代理', '白名单', '黑名单'],
           snackbar: false
         },
+        created() {
+          ;({ url: this.url, add: this.add, host: this.host, filter: this.filter, ruleType: this.ruleType } = this.getData())
+        },
         methods: {
           // url=xxx&host=xxx => encodeURI => base64
-          getQuery([...arr]) {
-            let query = ''
-            arr
-              .filter(element => element.value !== '')
-              .forEach(element => {
-                query = `${query}&${element.name}=${element.value}`
-              })
-            return window.btoa(window.encodeURIComponent(query.replace('&', '')))
-          },
-          // 复制订阅链接到剪切板
-          copy() {
-            const path = `${location.origin}/subscribe?`
-            const query = this.getQuery([
+          getQuery() {
+            const arr = [
               {
                 name: 'url',
                 value: this.url.trim()
@@ -141,15 +133,42 @@
                 name: 'ruleType',
                 value: this.ruleType
               }
-            ])
-            // 复制
+            ]
+            let query = ''
+            arr
+              .filter(element => element.value !== '')
+              .forEach(element => {
+                query = `${query}&${element.name}=${element.value}`
+              })
+            return window.btoa(window.encodeURIComponent(query.replace('&', '')))
+          },
+          // 保存表单到localStorage中
+          saveData() {
+            localStorage.setItem(
+              'data',
+              JSON.stringify({
+                url: this.url,
+                add: this.add,
+                host: this.host,
+                filter: this.filter,
+                ruleType: this.ruleType
+              })
+            )
+          },
+          // 从localStorage中读取数据
+          getData() {
+            return JSON.parse(localStorage.getItem('data'))
+          },
+          // 复制订阅链接到剪切板
+          copy() {
             const aux = document.createElement('input')
-            aux.setAttribute('value', path + query)
+            aux.setAttribute('value', `${location.origin}/subscribe?${this.getQuery()}`)
             document.body.appendChild(aux)
             aux.select()
             document.execCommand('copy')
             document.body.removeChild(aux)
             this.snackbar = true
+            this.saveData()
           }
         }
       })
