@@ -1,8 +1,8 @@
 # clash-sub
 
-**只支持 vmess 的 ws 节点，其他本人不用，没做。**
+##### **对 Clash 订阅内容进行重新构建。只支持 vmess 的 ws 节点，其他本人不用，暂时没做。**
 
-### 安装
+## 安装
 
 ```
 git clone https://github.com/Flysky12138/clash-sub.git
@@ -13,4 +13,4 @@ yarn serve
 
 ### 使用
 
-访问：`http://127.0.0.1:666`
+[`https://clash-sub.vercel.app/`](https://clash-sub.vercel.app/)
