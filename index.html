@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>clash-sub</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+  </head>
+  <body>
+    <div id="app">
+      <v-app>
+        <v-main>
+          <v-container class="mx-auto my-5" style="max-width: 700px">
+            <v-card class="d-flex flex-column align-center elevation-1">
+              <v-card-title>
+                <a
+                  class="text-h3 text-decoration-none font-weight-bold text-uppercase"
+                  href="https://github.com/Flysky12138/clash-sub"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >clash-sub</a
+                >
+              </v-card-title>
+              <v-divider width="100%" class="gray"></v-divider>
+              <v-card-text>
+                <v-row class="my-3">
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="url"
+                      label="Clash 订阅地址"
+                      placeholder="https://xxx"
+                      hint="多个用 , 隔开"
+                      outlined
+                      clearable
+                      dense
+                      counter
+                      :counter-value="v => v ? v.trim().split(',').length : 0"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="add"
+                      label="额外添加节点"
+                      placeholder="vmess://xxx"
+                      hint="多个用 , 隔开"
+                      outlined
+                      clearable
+                      dense
+                      counter
+                      :counter-value="v => v ? v.trim().split(',').length : 0"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="filter"
+                      label="过滤，得到节点名包含填写字符串的节点"
+                      placeholder="香港,新加坡"
+                      hint="多个用 , 隔开"
+                      outlined
+                      clearable
+                      dense
+                      counter
+                      :counter-value="v => v ? v.trim().split(',').length : 0"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-text-field v-model="host" label="混淆" placeholder="ltetp.tv189.com" outlined clearable dense></v-text-field>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-radio-group v-model="ruleType" row class="mt-0 pt-0" id="radio-group" dense>
+                      <v-radio v-for="n in 3" :key="n" :label="labels[n-1]"></v-radio>
+                    </v-radio-group>
+                  </v-col>
+                  <v-col cols="12">
+                    <v-btn color="success" block elevation="1" @click="copy" :disabled="url === '' || url===null">复制订阅地址</v-btn>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+            </v-card>
+            <v-snackbar v-model="snackbar" timeout="6000" shaped class="mt-10" light transition="slide-y-transition" absolute top>
+              <span class="font-weight-bold">复制成功</span>
+              <template v-slot:action="{ attrs }">
+                <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"> Close </v-btn>
+              </template>
+            </v-snackbar>
+          </v-container>
+        </v-main>
+      </v-app>
+    </div>
+    <script>
+      new Vue({
+        el: '#app',
+        vuetify: new Vuetify(),
+        data: {
+          url: '',
+          add: '',
+          host: '',
+          filter: '',
+          ruleType: 1,
+          labels: ['全代理', '白名单', '黑名单'],
+          snackbar: false
+        },
+        methods: {
+          // url=xxx&host=xxx => encodeURI => base64
+          getQuery([...arr]) {
+            let query = ''
+            arr
+              .filter(element => element.value !== '')
+              .forEach(element => {
+                query = `${query}&${element.name}=${element.value}`
+              })
+            return window.btoa(window.encodeURIComponent(query.replace('&', '')))
+          },
+          // 复制订阅链接到剪切板
+          copy() {
+            const path = `${location.origin}/subscribe?`
+            const query = this.getQuery([
+              {
+                name: 'url',
+                value: this.url.trim()
+              },
+              {
+                name: 'add',
+                value: this.add.trim()
+              },
+              {
+                name: 'host',
+                value: this.host.trim()
+              },
+              {
+                name: 'filter',
+                value: this.filter.trim()
+              },
+              {
+                name: 'ruleType',
+                value: this.ruleType
+              }
+            ])
+            // 复制
+            const aux = document.createElement('input')
+            aux.setAttribute('value', path + query)
+            document.body.appendChild(aux)
+            aux.select()
+            document.execCommand('copy')
+            document.body.removeChild(aux)
+            this.snackbar = true
+          }
+        }
+      })
+    </script>
+    <style>
+      #radio-group {
+        display: flex;
+        justify-content: space-evenly;
+      }
+    </style>
+  </body>
+</html>

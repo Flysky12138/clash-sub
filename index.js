@@ -1,13 +1,22 @@
+const atob = require('./common/atob')
 const getUrlQueryMap = require('./getUrlQueryMap')
 const getSubArray = require('./getSubArray')
 const mixin = require('./mixin/index')
 const YAML = require('yaml')
 const express = require('express')
 
-// 建立链接
 const app = express()
-app.get('/', function (request, response) {
-  const queryMap = getUrlQueryMap(decodeURI(request.url))
+
+// 网页
+app.get('/', function getState(req, res, next) {
+  res.setHeader('Content-Type', 'text/html')
+  res.sendFile(`${__dirname}/index.html`)
+})
+
+// 订阅转换
+app.get('/subscribe', function (request, response) {
+  const query = decodeURIComponent(atob(request.url.replace('/subscribe?', '')))
+  const queryMap = getUrlQueryMap(query)
   if (queryMap.has('url')) {
     getSubArray(queryMap.get('url'), queryMap.has('add') ? queryMap.get('add') : '')
       .then(res => {
