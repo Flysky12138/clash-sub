@@ -32,7 +32,7 @@
                   <v-col cols="12">
                     <v-text-field
                       v-model="from.url"
-                      label="Clash 订阅地址"
+                      label="订阅地址"
                       placeholder="https://xxx"
                       hint="多个用 , 隔开"
                       outlined
@@ -77,16 +77,10 @@
                     </v-radio-group>
                   </v-col>
                   <v-col cols="12">
-                    <v-btn color="success" block elevation="1" @click="copy" :disabled="!from.url">复制订阅地址</v-btn>
+                    <v-btn color="success" block elevation="1" @click="copy" :disabled="!from.url" :loading="loading">复制订阅地址</v-btn>
                   </v-col>
                 </v-row>
               </v-card-text>
-              <v-snackbar v-model="snackbar" timeout="6000" shaped class="mt-2" light transition="slide-y-transition" absolute top>
-                <span class="font-weight-bold">复制成功</span>
-                <template v-slot:action="{ attrs }">
-                  <v-btn color="pink" text v-bind="attrs" @click="snackbar = false"> Close </v-btn>
-                </template>
-              </v-snackbar>
             </v-card>
           </v-container>
         </v-main>
@@ -105,7 +99,7 @@
             ruleType: 1
           },
           labels: ['全代理', '白名单', '黑名单'],
-          snackbar: false
+          loading: false
         },
         created() {
           this.getData() && ({ ...this.from } = { ...this.getData() })
@@ -137,8 +131,11 @@
             aux.select()
             document.execCommand('copy')
             document.body.removeChild(aux)
-            this.snackbar = true
             this.saveData()
+            this.loading = true
+            setTimeout(() => {
+              this.loading = false
+            }, 1000)
           }
         }
       })
