@@ -1,6 +1,6 @@
 const atob = require('./common/atob')
-const getUrlQueryMap = require('./getUrlQueryMap')
-const getSubArray = require('./getSubArray')
+const urlQueryMap = require('./common/urlQueryMap')
+const subArray = require('./common/subArray')
 const mixin = require('./mixin/index')
 const YAML = require('yaml')
 const express = require('express')
@@ -10,15 +10,15 @@ const app = express()
 // 网页
 app.get('/', function getState(req, res, next) {
   res.setHeader('Content-Type', 'text/html')
-  res.sendFile(`${__dirname}/index.html`)
+  res.sendFile(`${__dirname}/public/index.html`)
 })
 
 // 订阅转换
 app.get('/subscribe', function (request, response) {
   const query = decodeURIComponent(atob(request.url.replace('/subscribe?', '')))
-  const queryMap = getUrlQueryMap(query)
+  const queryMap = urlQueryMap(query)
   if (queryMap.has('url')) {
-    getSubArray(queryMap.get('url'), queryMap.has('add') ? queryMap.get('add') : '')
+    subArray(queryMap.get('url'), queryMap.has('add') ? queryMap.get('add') : '')
       .then(res => {
         // 转换文件
         const result = mixin({

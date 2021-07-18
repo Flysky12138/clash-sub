@@ -1,5 +1,5 @@
 // 解析请求query参数，返回Map容器
-function getUrlQueryMap(query) {
+function urlQueryMap(query) {
   return new Map(
     query.split('&').map(item => {
       let queryItemArray = item.split('=')
@@ -8,4 +8,4 @@ function getUrlQueryMap(query) {
   )
 }
 
-module.exports = getUrlQueryMap
+module.exports = urlQueryMap

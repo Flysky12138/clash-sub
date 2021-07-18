@@ -1,5 +1,5 @@
 const axios = require('axios')
-const atob = require('./common/atob')
+const atob = require('./atob')
 
 // 单个订阅请求
 async function once(url) {
@@ -11,7 +11,7 @@ async function once(url) {
 }
 
 // 获取订阅内容，返回包含节点对象的数组
-async function getSubArray(url, add) {
+async function subArray(url, add) {
   let [funcHttp, vmessArrayStr] = [[], [...add.split(',')]]
   // 创建包含请求方法的数组
   url.split(',').forEach(element => funcHttp.push(once(element)))
@@ -33,4 +33,4 @@ async function getSubArray(url, add) {
   })
 }
 
-module.exports = getSubArray
+module.exports = subArray
