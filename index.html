@@ -16,11 +16,11 @@
     <div id="app">
       <v-app>
         <v-main>
-          <v-container class="mx-auto my-5" style="max-width: 700px">
-            <v-card class="d-flex flex-column align-center elevation-1">
-              <v-card-title>
+          <v-container class="mx-auto fill-height" style="max-width: 700px">
+            <v-card class="d-flex flex-column align-center">
+              <v-card-title style="width: 100%" class="grey lighten-3">
                 <a
-                  class="text-h3 text-decoration-none font-weight-bold text-uppercase"
+                  class="text-h3 text-decoration-none font-weight-bold text-uppercase mx-auto"
                   href="https://github.com/Flysky12138/clash-sub"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -32,7 +32,7 @@
                 <v-row class="my-3">
                   <v-col cols="12">
                     <v-text-field
-                      v-model="url"
+                      v-model="from.url"
                       label="Clash 订阅地址"
                       placeholder="https://xxx"
                       hint="多个用 , 隔开"
@@ -45,7 +45,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="add"
+                      v-model="from.add"
                       label="额外添加节点"
                       placeholder="vmess://xxx"
                       hint="多个用 , 隔开"
@@ -58,7 +58,7 @@
                   </v-col>
                   <v-col cols="12">
                     <v-text-field
-                      v-model="filter"
+                      v-model="from.filter"
                       label="过滤，得到节点名包含填写字符串的节点"
                       placeholder="香港,新加坡"
                       hint="多个用 , 隔开"
@@ -70,15 +70,15 @@
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-text-field v-model="host" label="混淆" placeholder="ltetp.tv189.com" outlined clearable dense></v-text-field>
+                    <v-text-field v-model="from.host" label="混淆" placeholder="ltetp.tv189.com" outlined clearable dense></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-radio-group v-model="ruleType" row class="mt-0 pt-0" id="radio-group" dense>
+                    <v-radio-group v-model="from.ruleType" row class="mt-0 pt-0" id="radio-group" dense>
                       <v-radio v-for="n in 3" :key="n" :label="labels[n-1]"></v-radio>
                     </v-radio-group>
                   </v-col>
                   <v-col cols="12">
-                    <v-btn color="success" block elevation="1" @click="copy" :disabled="url === '' || url===null">复制订阅地址</v-btn>
+                    <v-btn color="success" block elevation="1" @click="copy" :disabled="!from.url">复制订阅地址</v-btn>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -98,66 +98,37 @@
         el: '#app',
         vuetify: new Vuetify(),
         data: {
-          url: '',
-          add: '',
-          host: '',
-          filter: '',
-          ruleType: 1,
+          from: {
+            url: '',
+            add: '',
+            host: '',
+            filter: '',
+            ruleType: 1
+          },
           labels: ['全代理', '白名单', '黑名单'],
           snackbar: false
         },
         created() {
-          ;({ url: this.url, add: this.add, host: this.host, filter: this.filter, ruleType: this.ruleType } = this.getData())
+          ;({ ...this.from } = { ...this.getData() })
         },
         methods: {
           // url=xxx&host=xxx => encodeURI => base64
           getQuery() {
-            const arr = [
-              {
-                name: 'url',
-                value: this.url.trim()
-              },
-              {
-                name: 'add',
-                value: this.add.trim()
-              },
-              {
-                name: 'host',
-                value: this.host.trim()
-              },
-              {
-                name: 'filter',
-                value: this.filter.trim()
-              },
-              {
-                name: 'ruleType',
-                value: this.ruleType
-              }
-            ]
             let query = ''
-            arr
-              .filter(element => element.value !== '')
-              .forEach(element => {
-                query = `${query}&${element.name}=${element.value}`
-              })
+            for (const [key, value] of Object.entries(this.from)) {
+              if (value !== '') {
+                query = `${query}&${key}=${value}`
+              }
+            }
             return window.btoa(window.encodeURIComponent(query.replace('&', '')))
           },
           // 保存表单到localStorage中
           saveData() {
-            localStorage.setItem(
-              'data',
-              JSON.stringify({
-                url: this.url,
-                add: this.add,
-                host: this.host,
-                filter: this.filter,
-                ruleType: this.ruleType
-              })
-            )
+            localStorage.setItem('from', JSON.stringify(this.from))
           },
           // 从localStorage中读取数据
           getData() {
-            return JSON.parse(localStorage.getItem('data'))
+            return JSON.parse(localStorage.getItem('from'))
           },
           // 复制订阅链接到剪切板
           copy() {
