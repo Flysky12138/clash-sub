@@ -18,7 +18,7 @@
         <v-main>
           <v-container class="mx-auto fill-height" style="max-width: 700px">
             <v-card class="d-flex flex-column align-center">
-              <v-card-title style="width: 100%" class="grey lighten-3">
+              <v-card-title style="width: 100%" class="grey lighten-2">
                 <a
                   class="text-h3 text-decoration-none font-weight-bold text-uppercase mx-auto"
                   href="https://github.com/Flysky12138/clash-sub"
@@ -109,7 +109,7 @@
           snackbar: false
         },
         created() {
-          ;({ ...this.from } = { ...this.getData() })
+          this.getData() && ({ ...this.from } = { ...this.getData() })
         },
         methods: {
           // url=xxx&host=xxx => encodeURI => base64
