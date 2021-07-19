@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>clash-sub</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
+    <!-- vue -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
+    <!-- vuetify -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, minimal-ui" />
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
   </head>
   <body>
@@ -16,7 +18,7 @@
       <v-app>
         <v-main>
           <v-container class="mx-auto" :class="{'fill-height': $vuetify.breakpoint.smAndUp}" style="max-width: 700px">
-            <v-card class="d-flex flex-column align-center elevation-0" outlined rounded="lg">
+            <v-card outlined rounded="lg">
               <v-card-title style="width: 100%" class="grey lighten-3">
                 <a
                   class="text-h4 text-decoration-none font-weight-bold text-uppercase mx-auto success--text"
@@ -28,7 +30,7 @@
               </v-card-title>
               <v-divider width="100%" class="gray"></v-divider>
               <v-card-text>
-                <v-row class="my-3">
+                <v-row class="mt-3">
                   <v-col cols="12">
                     <v-text-field
                       v-model="from.url"
@@ -58,7 +60,7 @@
                   <v-col cols="12">
                     <v-text-field
                       v-model="from.filter"
-                      label="过滤，得到节点名包含填写字符串的节点"
+                      label="保留节点名含填写字符串的节点"
                       placeholder="香港,新加坡"
                       hint="多个用 , 隔开"
                       outlined
@@ -72,11 +74,13 @@
                     <v-text-field v-model="from.host" label="混淆" placeholder="baidu.com" outlined clearable dense></v-text-field>
                   </v-col>
                   <v-col cols="12">
-                    <v-radio-group v-model="from.ruleType" row class="mt-0 pt-0" id="radio-group" dense>
-                      <v-radio v-for="n in 3" :key="n" :label="labels[n-1]"></v-radio>
-                    </v-radio-group>
+                    <v-card outlined rounded="lg">
+                      <v-radio-group v-model="from.ruleType" row id="radio-group" dense>
+                        <v-radio v-for="n in 3" :key="n" :label="labels[n-1]"></v-radio>
+                      </v-radio-group>
+                    </v-card>
                   </v-col>
-                  <v-col cols="12">
+                  <v-col cols="12" class="my-6">
                     <v-btn color="success" block elevation="1" @click="install" :disabled="!from.url">导入到 Clash</v-btn>
                   </v-col>
                 </v-row>
