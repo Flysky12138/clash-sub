@@ -135,6 +135,7 @@
           // 导入到Clash
           install() {
             window.location.href = `clash://install-config?url=${location.origin}/subscribe?${this.getQuery()}`
+            this.saveData()
           }
         }
       })
