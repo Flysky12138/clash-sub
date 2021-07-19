@@ -25,8 +25,15 @@
                   href="https://github.com/Flysky12138/clash-sub"
                   target="_blank"
                   rel="noopener noreferrer"
-                  v-text="text.header"
-                ></a>
+                >
+                  <template v-if="bypass">
+                    <v-badge right overlap color="success" offset-x="-5" content="分流">{{text.header}}</v-badge>
+                  </template>
+                  <template v-else>{{text.header}}</template>
+                </a>
+                <v-btn absolute right x-small fab elevation="0" color="grey lighten-3" @click="onClick">
+                  <v-icon>{{bypass?'mdi-pinwheel':'mdi-pinwheel-outline'}}</v-icon>
+                </v-btn>
               </v-card-title>
               <v-divider width="100%" class="gray"></v-divider>
               <v-card-text>
@@ -60,11 +67,11 @@
                   <v-col cols="12">
                     <v-text-field
                       v-model="from.filter"
-                      label="过滤节点"
+                      :label="bypass?'国内分组':'节点过滤'"
                       placeholder=".*(香港|新加坡).*"
                       prefix="/"
                       suffix="/"
-                      hint="正则匹配。保留名字被匹配到的节点，默认保留所有。"
+                      :hint="`正则匹配。${bypass?'分配匹配的节点到国内分组中，其余分配到国外分组中':'保留匹配到的节点，默认保留所有'}`"
                       outlined
                       clearable
                       dense
@@ -76,7 +83,7 @@
                   <v-col cols="12">
                     <v-card outlined rounded="lg">
                       <v-radio-group v-model="from.ruleType" row id="radio-group" dense>
-                        <v-radio v-for="n in 3" :key="n" :label="text.labels[n-1]"></v-radio>
+                        <v-radio v-for="n in 3" :key="n" :label="text.labels[n-1]" v-show="!bypass||n!==1"></v-radio>
                       </v-radio-group>
                     </v-card>
                   </v-col>
@@ -102,6 +109,7 @@
             filter: '',
             ruleType: 1
           },
+          bypass: false, // 分流
           text: {
             header: 'clash-sub',
             btn: '导入到 Clash',
@@ -112,6 +120,12 @@
           this.getData() && ({ ...this.from } = { ...this.getData() })
         },
         methods: {
+          onClick() {
+            this.bypass = !this.bypass
+            if (this.from.ruleType === 0) {
+              this.from.ruleType = 1
+            }
+          },
           // url=xxx&host=xxx => encodeURI => base64
           getQuery() {
             let query = ''
@@ -120,6 +134,7 @@
                 query = `${query}&${key}=${value}`
               }
             }
+            this.bypass && (query = `${query}&bypass=1`)
             return window.btoa(window.encodeURIComponent(query.replace('&', '')))
           },
           // 保存表单到localStorage中
