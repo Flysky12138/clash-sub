@@ -16,10 +16,10 @@
       <v-app>
         <v-main>
           <v-container class="mx-auto" :class="{'fill-height': $vuetify.breakpoint.smAndUp}" style="max-width: 700px">
-            <v-card class="d-flex flex-column align-center elevation-0" outlined>
+            <v-card class="d-flex flex-column align-center elevation-0" outlined rounded="lg">
               <v-card-title style="width: 100%" class="grey lighten-3">
                 <a
-                  class="text-h4 text-decoration-none font-weight-bold text-uppercase mx-auto"
+                  class="text-h4 text-decoration-none font-weight-bold text-uppercase mx-auto success--text"
                   href="https://github.com/Flysky12138/clash-sub"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -39,7 +39,7 @@
                       clearable
                       dense
                       counter
-                      :counter-value="v => v ? v.trim().split(',').length : 0"
+                      :counter-value="v => v ? v.trim().split(',').filter(res => res.includes('://')).length : 0"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -52,7 +52,7 @@
                       clearable
                       dense
                       counter
-                      :counter-value="v => v ? v.trim().split(',').length : 0"
+                      :counter-value="v => v ? v.trim().split(',').filter(res => res.includes('vmess://')).length : 0"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -65,7 +65,7 @@
                       clearable
                       dense
                       counter
-                      :counter-value="v => v ? v.trim().split(',').length : 0"
+                      :counter-value="v => v ? v.trim().split(',').filter(res => res).length : 0"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
