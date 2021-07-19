@@ -77,7 +77,7 @@
                     </v-radio-group>
                   </v-col>
                   <v-col cols="12">
-                    <v-btn color="success" block elevation="1" @click="copy" :disabled="!from.url" :loading="loading">复制订阅地址</v-btn>
+                    <v-btn color="success" block elevation="1" @click="install" :disabled="!from.url">导入到 Clash</v-btn>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -98,8 +98,7 @@
             filter: '',
             ruleType: 1
           },
-          labels: ['全代理', '白名单', '黑名单'],
-          loading: false
+          labels: ['全代理', '白名单', '黑名单']
         },
         created() {
           this.getData() && ({ ...this.from } = { ...this.getData() })
@@ -123,19 +122,9 @@
           getData() {
             return JSON.parse(localStorage.getItem('from'))
           },
-          // 复制订阅链接到剪切板
-          copy() {
-            const aux = document.createElement('input')
-            aux.setAttribute('value', `${location.origin}/subscribe?${this.getQuery()}`)
-            document.body.appendChild(aux)
-            aux.select()
-            document.execCommand('copy')
-            document.body.removeChild(aux)
-            this.saveData()
-            this.loading = true
-            setTimeout(() => {
-              this.loading = false
-            }, 1000)
+          // 导入到Clash
+          install() {
+            window.location.href = `clash://install-config?url=${location.origin}/subscribe?${this.getQuery()}`
           }
         }
       })
