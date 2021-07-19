@@ -24,7 +24,7 @@ app.get('/subscribe', function (request, response) {
         const result = mixin({
           subArr: res,
           ruleType: queryMap.has('ruleType') ? queryMap.get('ruleType') : 1,
-          filter: queryMap.has('filter') ? queryMap.get('filter') : '.',
+          filter: queryMap.has('filter') ? queryMap.get('filter') : '.*',
           host: queryMap.has('host') ? queryMap.get('host') : 'ltetp.tv189.com'
         })
         // 发送文件
