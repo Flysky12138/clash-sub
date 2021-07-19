@@ -47,7 +47,7 @@
                   <v-col cols="12">
                     <v-text-field
                       v-model="from.add"
-                      label="额外添加节点"
+                      label="追加节点"
                       placeholder="vmess://xxx"
                       hint="多个用 , 隔开"
                       outlined
@@ -60,9 +60,9 @@
                   <v-col cols="12">
                     <v-text-field
                       v-model="from.filter"
-                      label="保留节点名含填写字符串的节点"
+                      label="过滤节点"
                       placeholder="香港,新加坡"
-                      hint="多个用 , 隔开"
+                      hint="保留节点名含填写字符串的节点，默认保留所有。多个用 , 隔开。"
                       outlined
                       clearable
                       dense
