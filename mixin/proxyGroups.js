@@ -27,8 +27,8 @@ function proxyGroups(needlists, otherlists, bypass) {
   return bypass
     ? [
         ...selectBypass,
-        ...proxyGroupsItems.map(
-          res => (
+        ...proxyGroupsItems
+          .map(res => [
             {
               name: `${res[0]}A`,
               type: res[1],
@@ -43,8 +43,8 @@ function proxyGroups(needlists, otherlists, bypass) {
               url: 'http://www.gstatic.com/generate_204',
               interval: 300
             }
-          )
-        )
+          ])
+          .flat()
       ]
     : [
         select,
