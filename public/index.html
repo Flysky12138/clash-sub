@@ -92,9 +92,15 @@
                   <v-col cols="12" class="my-6">
                     <v-row>
                       <v-col cols="6">
-                        <v-btn color="success" block :loading="loading" elevation="1" @click="copy" :disabled="bypass ? !(from.url&&from.filter) : !from.url"
-                          >{{text.btn[0]}}</v-btn
-                        >
+                        <v-btn
+                          color="success"
+                          block
+                          :loading="loading"
+                          elevation="1"
+                          @click="copy"
+                          :disabled="bypass ? !(from.url&&from.filter) : !from.url"
+                          v-text="text.btn[0]"
+                        ></v-btn>
                       </v-col>
                       <v-col>
                         <v-btn
@@ -172,10 +178,14 @@
             aux.select()
             document.execCommand('copy')
             document.body.removeChild(aux)
+            // 样式
+            const text = this.text.btn[0]
+            this.text.btn[0] = ''
             this.loading = true
             this.saveData()
             setTimeout(() => {
               this.loading = false
+              this.text.btn[0] = text
             }, 800)
           },
           // 导入到Clash
