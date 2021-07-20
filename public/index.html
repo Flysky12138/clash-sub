@@ -130,7 +130,7 @@
           getQuery() {
             let query = ''
             for (const [key, value] of Object.entries(this.from)) {
-              if (value !== '') {
+              if (value !== '' && value !== null) {
                 query = `${query}&${key}=${value}`
               }
             }
