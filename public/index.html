@@ -68,7 +68,7 @@
                     <v-text-field
                       v-model="from.filter"
                       :label="bypass?'国内分组':'节点过滤'"
-                      placeholder=".*(香港|新加坡).*"
+                      placeholder="香港|新加坡"
                       prefix="/"
                       suffix="/"
                       :hint="`正则匹配。${bypass?'分配匹配的节点到国内分组中，其余分配到国外分组中':'保留匹配到的节点，默认保留所有'}`"
