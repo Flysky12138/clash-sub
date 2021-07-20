@@ -48,6 +48,7 @@
                       clearable
                       dense
                       counter
+                      :error="from.url === null || from.url.length === 0"
                       :counter-value="v => v ? v.trim().split(',').filter(res => res.includes('://')).length : 0"
                     ></v-text-field>
                   </v-col>
@@ -75,6 +76,7 @@
                       outlined
                       clearable
                       dense
+                      :error="bypass && (from.filter === null || from.filter.length === 0)"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -83,12 +85,28 @@
                   <v-col cols="12">
                     <v-card outlined rounded="lg">
                       <v-radio-group v-model="from.ruleType" row id="radio-group" dense>
-                        <v-radio v-for="n in 3" :key="n" :label="text.labels[n-1]" v-show="!bypass||n!==1"></v-radio>
+                        <v-radio v-for="n in 3" :key="n" :label="text.labels[n-1]" v-show="!bypass || n!==1"></v-radio>
                       </v-radio-group>
                     </v-card>
                   </v-col>
                   <v-col cols="12" class="my-6">
-                    <v-btn color="success" block elevation="1" @click="install" :disabled="bypass?!(from.url&&from.filter):!from.url" v-text="text.btn"></v-btn>
+                    <v-row>
+                      <v-col cols="6">
+                        <v-btn color="success" block :loading="loading" elevation="1" @click="copy" :disabled="bypass ? !(from.url&&from.filter) : !from.url"
+                          >{{text.btn[0]}}</v-btn
+                        >
+                      </v-col>
+                      <v-col>
+                        <v-btn
+                          color="success"
+                          block
+                          elevation="1"
+                          @click="install"
+                          :disabled="bypass?!(from.url&&from.filter):!from.url"
+                          v-text="text.btn[1]"
+                        ></v-btn>
+                      </v-col>
+                    </v-row>
                   </v-col>
                 </v-row>
               </v-card-text>
@@ -110,9 +128,10 @@
             ruleType: 1
           },
           bypass: false, // 分流
+          loading: false,
           text: {
             header: 'clash-sub',
-            btn: '导入到 Clash',
+            btn: ['复制订阅地址', '导入到 Clash'],
             labels: ['全代理', '白名单', '黑名单']
           }
         },
@@ -144,6 +163,20 @@
           // 从localStorage中读取数据
           getData() {
             return JSON.parse(localStorage.getItem('from'))
+          },
+          // 复制订阅地址
+          copy() {
+            const aux = document.createElement('input')
+            aux.setAttribute('value', `${location.origin}/subscribe?${this.getQuery()}`)
+            document.body.appendChild(aux)
+            aux.select()
+            document.execCommand('copy')
+            document.body.removeChild(aux)
+            this.loading = true
+            this.saveData()
+            setTimeout(() => {
+              this.loading = false
+            }, 800)
           },
           // 导入到Clash
           install() {
