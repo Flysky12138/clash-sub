@@ -66,6 +66,18 @@ const whitelists = [
   'GEOIP,CN,DIRECT',
   'MATCH,手动选择'
 ]
+const whitelistsBypass = [
+  ...commonRulelists,
+  'RULE-SET,icloud,国内',
+  'RULE-SET,apple,国内',
+  'RULE-SET,google,国内',
+  'RULE-SET,proxy,国外',
+  'RULE-SET,direct,国内',
+  'RULE-SET,telegramcidr,国外',
+  'GEOIP,,国内',
+  'GEOIP,CN,国内',
+  'MATCH,国外'
+]
 // 黑名单
 const blacklists = [
   ...directProcessNames,
@@ -76,7 +88,21 @@ const blacklists = [
   'RULE-SET,telegramcidr,手动选择',
   'MATCH,DIRECT'
 ]
+const blacklistsBypass = [
+  ...commonRulelists,
+  'RULE-SET,tld-not-cn,国外',
+  'RULE-SET,gfw,国外',
+  'RULE-SET,greatfire,国外',
+  'RULE-SET,telegramcidr,国外',
+  'MATCH,国内'
+]
 // 免流规则
 const mllists = [...commonRulelists, 'MATCH,手动选择']
 
-module.exports = [mllists, whitelists, blacklists]
+function rules(bypass, ruleType) {
+  const arr = [mllists, whitelists, blacklists]
+  const arrBypass = [null, whitelistsBypass, blacklistsBypass]
+  return bypass ? arrBypass[ruleType] : arr[ruleType]
+}
+
+module.exports = rules

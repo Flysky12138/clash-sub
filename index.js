@@ -25,7 +25,8 @@ app.get('/subscribe', function (request, response) {
           subArr: res,
           ruleType: queryMap.has('ruleType') ? queryMap.get('ruleType') : 1,
           filter: queryMap.has('filter') ? queryMap.get('filter') : '.*',
-          host: queryMap.has('host') ? queryMap.get('host') : 'ltetp.tv189.com'
+          host: queryMap.has('host') ? queryMap.get('host') : 'ltetp.tv189.com',
+          bypass: queryMap.has('bypass') ? true : false
         })
         // 发送文件
         response.send(YAML.stringify(result, null, '  ').replace(/(dns:\n  |proxies:\n  -|proxy-groups:\n  -|rule-providers:\n  |rules:\n  -)/gi, '\n$1'))

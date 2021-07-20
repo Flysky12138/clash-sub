@@ -27,12 +27,12 @@
                   rel="noopener noreferrer"
                 >
                   <template v-if="bypass">
-                    <v-badge right overlap color="success" offset-x="-5" content="分流">{{text.header}}</v-badge>
+                    <v-badge left overlap color="success" offset-x="0" content="分流">{{text.header}}</v-badge>
                   </template>
                   <template v-else>{{text.header}}</template>
                 </a>
-                <v-btn absolute right x-small fab elevation="0" color="grey lighten-3" @click="onClick">
-                  <v-icon>{{bypass?'mdi-pinwheel':'mdi-pinwheel-outline'}}</v-icon>
+                <v-btn absolute right x-small fab elevation="0" color="grey lighten-3" @mousedown.prevent="onClick">
+                  <v-icon v-text="bypass?'mdi-pinwheel':'mdi-pinwheel-outline'"></v-icon>
                 </v-btn>
               </v-card-title>
               <v-divider width="100%" class="gray"></v-divider>
