@@ -91,7 +91,7 @@
                   </v-col>
                   <v-col cols="12" class="my-6">
                     <v-row>
-                      <v-col cols="6">
+                      <v-col cols="7" md="5">
                         <v-btn
                           color="success"
                           block
@@ -102,14 +102,24 @@
                           v-text="text.btn[0]"
                         ></v-btn>
                       </v-col>
-                      <v-col>
+                      <v-col md="2" order="first" order-md="1">
+                        <v-btn
+                          color="success"
+                          block
+                          elevation="1"
+                          @click="saveData"
+                          :disabled="bypass ? !(from.url && from.filter) : !from.url"
+                          v-text="text.btn[1]"
+                        ></v-btn>
+                      </v-col>
+                      <v-col cols="12" md="5" order="2">
                         <v-btn
                           color="success"
                           block
                           elevation="1"
                           @click="install"
                           :disabled="bypass ? !(from.url && from.filter) : !from.url"
-                          v-text="text.btn[1]"
+                          v-text="text.btn[2]"
                         ></v-btn>
                       </v-col>
                     </v-row>
@@ -137,7 +147,7 @@
           loading: false,
           text: {
             header: 'clash-sub',
-            btn: ['复制订阅地址', '导入到 Clash'],
+            btn: ['复制订阅地址', '保存模板', '导入到 Clash'],
             labels: ['全代理', '白名单', '黑名单']
           }
         },
@@ -182,7 +192,6 @@
             const text = this.text.btn[0]
             this.text.btn[0] = ''
             this.loading = true
-            this.saveData()
             setTimeout(() => {
               this.loading = false
               this.text.btn[0] = text
@@ -191,7 +200,6 @@
           // 导入到Clash
           install() {
             window.location.href = `clash://install-config?url=${location.origin}/subscribe?${this.getQuery()}`
-            this.saveData()
           }
         }
       })
