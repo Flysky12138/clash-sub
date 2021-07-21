@@ -32,7 +32,7 @@
                   <template v-else>{{text.header}}</template>
                 </a>
                 <v-btn absolute right small fab elevation="0" color="grey lighten-3" @mousedown.prevent="onClick">
-                  <v-icon v-text="bypass?'mdi-pinwheel':'mdi-pinwheel-outline'"></v-icon>
+                  <v-icon v-text="bypass ? 'mdi-pinwheel' : 'mdi-pinwheel-outline'"></v-icon>
                 </v-btn>
               </v-card-title>
               <v-divider width="100%" class="gray"></v-divider>
@@ -48,7 +48,7 @@
                       clearable
                       dense
                       counter
-                      :error="from.url === null || from.url.length === 0"
+                      :error="!from.url"
                       :counter-value="v => v ? v.trim().split(',').filter(res => res.includes('://')).length : 0"
                     ></v-text-field>
                   </v-col>
@@ -68,15 +68,15 @@
                   <v-col cols="12">
                     <v-text-field
                       v-model="from.filter"
-                      :label="bypass?'国内分组':'节点过滤'"
+                      :label="bypass ? '国内分组' : '节点过滤'"
                       placeholder="香港|新加坡"
                       prefix="/"
                       suffix="/"
-                      :hint="`正则匹配。${bypass?'分配匹配的节点到国内分组中，其余分配到国外分组中':'保留匹配到的节点，默认保留所有'}`"
+                      :hint="`正则匹配。${bypass ? '分配匹配的节点到国内分组中，其余分配到国外分组中' : '保留匹配到的节点，默认保留所有'}`"
                       outlined
                       clearable
                       dense
-                      :error="bypass && (from.filter === null || from.filter.length === 0)"
+                      :error="bypass && !from.filter"
                     ></v-text-field>
                   </v-col>
                   <v-col cols="12">
@@ -98,7 +98,7 @@
                           :loading="loading"
                           elevation="1"
                           @click="copy"
-                          :disabled="bypass ? !(from.url&&from.filter) : !from.url"
+                          :disabled="bypass ? !(from.url && from.filter) : !from.url"
                           v-text="text.btn[0]"
                         ></v-btn>
                       </v-col>
@@ -108,7 +108,7 @@
                           block
                           elevation="1"
                           @click="install"
-                          :disabled="bypass?!(from.url&&from.filter):!from.url"
+                          :disabled="bypass ? !(from.url && from.filter) : !from.url"
                           v-text="text.btn[1]"
                         ></v-btn>
                       </v-col>
