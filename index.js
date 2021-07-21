@@ -25,7 +25,7 @@ app.get('/subscribe', function (request, response) {
           subArr: res,
           ruleType: queryMap.has('ruleType') ? queryMap.get('ruleType') : 1,
           filter: queryMap.has('filter') ? queryMap.get('filter') : '.*',
-          host: queryMap.has('host') ? queryMap.get('host') : 'ltetp.tv189.com',
+          host: queryMap.has('host') ? queryMap.get('host') : 'a.189.cn',
           bypass: queryMap.has('bypass') ? true : false
         })
         // 发送文件
