@@ -12,6 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
+    <!-- axios -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   </head>
   <body>
     <div id="app">
@@ -27,106 +29,105 @@
                   rel="noopener noreferrer"
                 >
                   <template v-if="bypass">
-                    <v-badge left overlap color="success" offset-x="0" content="分流">{{text.header}}</v-badge>
+                    <v-badge left overlap color="success" offset-x="0" content="分流">clash-sub</v-badge>
                   </template>
-                  <template v-else>{{text.header}}</template>
+                  <template v-else>clash-sub</template>
                 </a>
-                <v-btn absolute right small fab elevation="0" color="grey lighten-3" @mousedown.prevent="onClick">
+                <v-btn absolute right small fab elevation="0" color="grey lighten-3" @mousedown.prevent="changeMode">
                   <v-icon v-text="bypass ? 'mdi-pinwheel' : 'mdi-pinwheel-outline'"></v-icon>
                 </v-btn>
               </v-card-title>
               <v-divider width="100%" class="gray"></v-divider>
               <v-card-text>
-                <v-row class="mt-3">
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="from.url"
-                      label="订阅地址"
-                      placeholder="https://xxx"
-                      hint="多个用 , 隔开"
-                      outlined
-                      clearable
-                      dense
-                      counter
-                      :error="!from.url"
-                      :counter-value="v => v ? v.trim().split(',').filter(res => res.includes('://')).length : 0"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="from.add"
-                      label="追加节点"
-                      placeholder="vmess://xxx"
-                      hint="多个用 , 隔开"
-                      outlined
-                      clearable
-                      dense
-                      counter
-                      :counter-value="v => v ? v.trim().split(',').filter(res => res.includes('vmess://')).length : 0"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field
-                      v-model="from.filter"
-                      :label="bypass ? '国内分组' : '节点过滤'"
-                      placeholder="香港|新加坡"
-                      prefix="/"
-                      suffix="/"
-                      :hint="`正则匹配。${bypass ? '分配匹配的节点到国内分组中，其余分配到国外分组中' : '保留匹配到的节点，默认保留所有'}`"
-                      outlined
-                      clearable
-                      dense
-                      :error="bypass && !from.filter"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-text-field v-model="from.host" label="混淆" placeholder="a.189.cn" outlined clearable dense></v-text-field>
-                  </v-col>
-                  <v-col cols="12">
-                    <v-card outlined rounded="lg">
-                      <v-radio-group v-model="from.ruleType" row id="radio-group" dense>
-                        <v-radio v-for="n in 3" :key="n" :label="text.labels[n-1]" v-show="!bypass || n!==1"></v-radio>
-                      </v-radio-group>
-                    </v-card>
-                  </v-col>
-                  <v-col cols="12" class="my-6">
-                    <v-row>
-                      <v-col cols="7" md="5">
-                        <v-btn
-                          color="success"
-                          block
-                          :loading="loading"
-                          elevation="1"
-                          @click="copy"
-                          :disabled="bypass ? !(from.url && from.filter) : !from.url"
-                          v-text="text.btn[0]"
-                        ></v-btn>
-                      </v-col>
-                      <v-col md="2" order="first" order-md="1">
-                        <v-btn
-                          color="success"
-                          block
-                          elevation="1"
-                          @click="saveData"
-                          :disabled="bypass ? !(from.url && from.filter) : !from.url"
-                          v-text="text.btn[1]"
-                        ></v-btn>
-                      </v-col>
-                      <v-col cols="12" md="5" order="2">
-                        <v-btn
-                          color="success"
-                          block
-                          elevation="1"
-                          @click="install"
-                          :disabled="bypass ? !(from.url && from.filter) : !from.url"
-                          v-text="text.btn[2]"
-                        ></v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-row>
+                <v-form v-model="valid">
+                  <v-row class="mt-3">
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="from.url"
+                        label="订阅地址"
+                        placeholder="https?:\/\/\S+"
+                        hint="多个用 , 隔开"
+                        outlined
+                        clearable
+                        dense
+                        counter
+                        :error="!/https?:\/\/\S+/.test(from.url)"
+                        :counter-value="v => v ? v.trim().split(',').filter(res => /https?:\/\/\S+/.test(res)).length : 0"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="from.add"
+                        label="追加节点"
+                        placeholder="vmess:\/\/\S+"
+                        hint="多个用 , 隔开"
+                        outlined
+                        clearable
+                        dense
+                        counter
+                        :counter-value="v => v ? v.trim().split(',').filter(res => /vmess:\/\/\S+/.test(res)).length : 0"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        v-model="from.filter"
+                        :label="bypass ? '国内分组' : '节点过滤'"
+                        placeholder="香港|新加坡"
+                        prefix="/"
+                        suffix="/"
+                        :hint="`正则匹配。${bypass ? '分配匹配的节点到国内分组中，其余分配到国外分组中' : '保留匹配到的节点，默认保留所有'}`"
+                        outlined
+                        clearable
+                        dense
+                        :error="bypass && !from.filter"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field v-model="from.host" label="混淆" placeholder="a.189.cn" outlined clearable dense></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-card outlined rounded="lg">
+                        <v-radio-group v-model="from.ruleType" row id="radio-group" dense>
+                          <v-radio v-for="n in 3" :key="n" :label="labels[n-1]" v-show="!bypass || n!==1"></v-radio>
+                        </v-radio-group>
+                      </v-card>
+                    </v-col>
+                    <v-col cols="12" class="my-6">
+                      <v-row>
+                        <v-col cols="6">
+                          <v-btn color="success" block elevation="1" @click="saveData">保存表单内容</v-btn>
+                        </v-col>
+                        <v-col cols="6">
+                          <v-btn color="success" block :loading="loadingA" elevation="1" @click="nodeLists" :disabled="!/https?:\/\/\S+/.test(from.url)"
+                            >查看节点列表</v-btn
+                          >
+                        </v-col>
+                        <v-col cols="12" md="6">
+                          <v-btn color="success" block :loading="loadingB" elevation="1" @click="copy" :disabled="!valid">复制订阅地址</v-btn>
+                        </v-col>
+                        <v-col cols="12" md="6">
+                          <v-btn color="success" block elevation="1" @click="install" :disabled="!valid">导入到 Clash</v-btn>
+                        </v-col>
+                      </v-row>
+                    </v-col>
+                  </v-row>
+                </v-form>
               </v-card-text>
             </v-card>
+            <v-bottom-sheet v-model="sheet" max-width="676">
+              <v-sheet class="overflow-auto scrollbar-hidden rounded-t-lg">
+                <v-expansion-panels accordion :value="0">
+                  <v-expansion-panel v-for="(items,index) in nodelists" :key="index" v-show="items.length">
+                    <v-expansion-panel-header expand-icon="mdi-chevron-up"
+                      >{{index ? bypass ? '国外' : '移除' : bypass ? '国内' : '保留'}}的节点名列表</v-expansion-panel-header
+                    >
+                    <v-expansion-panel-content>
+                      <v-chip color="purple" class="mr-1 mb-3" small link outlined v-for="(item,index) in items" :key="index">{{item.ps}}</v-chip>
+                    </v-expansion-panel-content>
+                  </v-expansion-panel>
+                </v-expansion-panels>
+              </v-sheet>
+            </v-bottom-sheet>
           </v-container>
         </v-main>
       </v-app>
@@ -144,18 +145,34 @@
             ruleType: 1
           },
           bypass: false, // 分流
-          loading: false,
-          text: {
-            header: 'clash-sub',
-            btn: ['复制订阅地址', '保存模板', '导入到 Clash'],
-            labels: ['全代理', '白名单', '黑名单']
-          }
+          loadingA: false,
+          loadingB: false,
+          valid: false, // 表单验证
+          labels: ['全代理', '白名单', '黑名单'],
+          sheet: false,
+          nodelists: [[], []]
         },
         created() {
           this.getData() && ({ ...this.from } = { ...this.getData() })
         },
         methods: {
-          onClick() {
+          // 查看节点列表
+          nodeLists() {
+            this.loadingA = true
+            const query = `url=${this.from.url}&add=${this.from.add}`
+            axios({
+              url: `${location.origin}/nodelists?${window.btoa(window.encodeURIComponent(query))}`,
+              method: 'get',
+              timeout: 5000
+            }).then(res => {
+              this.nodelists[0] = res.data.filter(res => new RegExp(this.from.filter).test(res.ps))
+              this.nodelists[1] = res.data.filter(res => !this.nodelists[0].includes(res))
+              this.sheet = true
+              this.loadingA = false
+            })
+          },
+          // 切换模式
+          changeMode() {
             this.bypass = !this.bypass
             if (this.from.ruleType === 0) {
               this.from.ruleType = 1
@@ -165,9 +182,7 @@
           getQuery() {
             let query = ''
             for (const [key, value] of Object.entries(this.from)) {
-              if (value !== '' && value !== null) {
-                query = `${query}&${key}=${value}`
-              }
+              value && (query = `${query}&${key}=${value}`)
             }
             this.bypass && (query = `${query}&bypass=1`)
             return window.btoa(window.encodeURIComponent(query.replace('&', '')))
@@ -189,12 +204,9 @@
             document.execCommand('copy')
             document.body.removeChild(aux)
             // 样式
-            const text = this.text.btn[0]
-            this.text.btn[0] = ''
-            this.loading = true
+            this.loadingB = true
             setTimeout(() => {
-              this.loading = false
-              this.text.btn[0] = text
+              this.loadingB = false
             }, 800)
           },
           // 导入到Clash
@@ -208,6 +220,14 @@
       #radio-group {
         display: flex;
         justify-content: space-evenly;
+      }
+      /* 隐藏滚动条类 */
+      .scrollbar-hidden {
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+      }
+      .scrollbar-hidden::-webkit-scrollbar {
+        display: none;
       }
     </style>
   </body>
