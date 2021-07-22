@@ -14,9 +14,19 @@
     <script src="https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js"></script>
     <!-- axios -->
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <!-- css -->
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+      #radio-group {
+        display: flex;
+        justify-content: space-evenly;
+      }
+    </style>
   </head>
   <body>
-    <div id="app">
+    <div id="app" v-cloak>
       <v-app>
         <v-main>
           <v-container class="mx-auto" :class="{'fill-height': $vuetify.breakpoint.smAndUp}" style="max-width: 700px">
@@ -88,7 +98,9 @@
                     <v-col cols="12">
                       <v-card outlined rounded="lg">
                         <v-radio-group v-model="from.ruleType" row id="radio-group" dense>
-                          <v-radio v-for="n in 3" :key="n" :label="labels[n-1]" v-show="!bypass || n!==1"></v-radio>
+                          <v-radio label="全代理" v-show="!bypass"></v-radio>
+                          <v-radio label="白名单"></v-radio>
+                          <v-radio label="黑名单"></v-radio>
                         </v-radio-group>
                       </v-card>
                     </v-col>
@@ -115,11 +127,11 @@
               </v-card-text>
             </v-card>
             <v-bottom-sheet v-model="sheet" max-width="676">
-              <v-sheet class="overflow-auto scrollbar-hidden rounded-t-lg">
+              <v-sheet class="overflow-hidden" rounded="t-lg">
                 <v-expansion-panels accordion :value="0">
-                  <v-expansion-panel v-for="(items,index) in nodelists" :key="index" v-show="items.length">
+                  <v-expansion-panel v-for="(items,index) in nodelists" :key="index">
                     <v-expansion-panel-header expand-icon="mdi-chevron-up"
-                      >{{index ? bypass ? '国外' : '移除' : bypass ? '国内' : '保留'}}的节点名列表</v-expansion-panel-header
+                      >{{index ? bypass ? '国外' : '移除' : bypass ? '国内' : '保留'}}的节点名列表（{{items.length}}）</v-expansion-panel-header
                     >
                     <v-expansion-panel-content>
                       <v-chip color="purple" class="mr-1 mb-3" small link outlined v-for="(item,index) in items" :key="index">{{item.ps}}</v-chip>
@@ -164,12 +176,16 @@
               url: `${location.origin}/nodelists?${window.btoa(window.encodeURIComponent(query))}`,
               method: 'get',
               timeout: 5000
-            }).then(res => {
-              this.nodelists[0] = res.data.filter(res => new RegExp(this.from.filter).test(res.ps))
-              this.nodelists[1] = res.data.filter(res => !this.nodelists[0].includes(res))
-              this.sheet = true
-              this.loadingA = false
             })
+              .then(res => {
+                this.nodelists[0] = res.data.filter(res => new RegExp(this.from.filter).test(res.ps))
+                this.nodelists[1] = res.data.filter(res => !this.nodelists[0].includes(res))
+                this.sheet = true
+                this.loadingA = false
+              })
+              .catch(err => {
+                this.loadingA = false
+              })
           },
           // 切换模式
           changeMode() {
@@ -216,19 +232,5 @@
         }
       })
     </script>
-    <style>
-      #radio-group {
-        display: flex;
-        justify-content: space-evenly;
-      }
-      /* 隐藏滚动条类 */
-      .scrollbar-hidden {
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-      }
-      .scrollbar-hidden::-webkit-scrollbar {
-        display: none;
-      }
-    </style>
   </body>
 </html>

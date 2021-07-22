@@ -16,7 +16,9 @@ app.get('/', function getState(req, res, next) {
 // 查看节点列表
 app.get('/nodelists', function (request, response) {
   const queryMap = urlQueryMap(decodeURIComponent(atob(request.url.replace('/nodelists?', ''))))
-  subArray(queryMap.get('url'), queryMap.get('add'))
+  let add = queryMap.get('add')
+  add = add === 'null' || add ? '' : add
+  subArray(queryMap.get('url'), add)
     .then(res => {
       response.send(JSON.stringify(res))
     })
