@@ -24,7 +24,7 @@ async function subArray(url, add) {
       .forEach(_element => vmessArrayStr.push(_element))
   })
   // 将vmess节点链接转换成JSON对象
-  const vmessArrayObj = vmessArrayStr.filter(item => item.length !== 0).map(item => JSON.parse(atob(item.replace('vmess://', '')), null, '  '))
+  const vmessArrayObj = vmessArrayStr.filter(item => item.length !== 0).map(item => JSON.parse(atob(item.replace('vmess://', ''))))
   // 过滤重复名
   let reslut = []
   vmessArrayObj.forEach(element => reslut.findIndex(item => item.ps === element.ps) === -1 && reslut.push(element))
