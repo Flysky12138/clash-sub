@@ -1,6 +1,6 @@
 # clash-sub
 
-##### **对 Clash 订阅内容进行重新构建。只支持 vmess 的 ws、http、tcp（http、tcp 未测试） 节点，其他本人不用，暂时没做。**
+##### **对 Clash 订阅内容进行重新构建。只支持 vmess 的 ws、http（http 未测试） 节点，其他本人不用，暂时没做。**
 
 ## 安装
 

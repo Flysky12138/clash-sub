@@ -134,12 +134,27 @@
                       >{{index ? bypass ? '国外' : '移除' : bypass ? '国内' : '保留'}}的节点名列表（{{items.length}}）</v-expansion-panel-header
                     >
                     <v-expansion-panel-content>
-                      <v-chip color="purple" class="mr-1 mb-3" small link outlined v-for="(item,index) in items" :key="index">{{item.ps}}</v-chip>
+                      <v-chip
+                        @click.stop="(dialog = true) & (node = item)"
+                        color="purple"
+                        class="mr-1 mb-3"
+                        small
+                        link
+                        outlined
+                        v-for="(item,index) in items"
+                        :key="index"
+                        >{{item.ps}}</v-chip
+                      >
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
               </v-sheet>
             </v-bottom-sheet>
+            <v-dialog v-model="dialog" max-width="380">
+              <v-card>
+                <div style="white-space: pre-wrap" class="pa-3">{{node}}</div>
+              </v-card>
+            </v-dialog>
           </v-container>
         </v-main>
       </v-app>
@@ -162,7 +177,9 @@
           valid: false, // 表单验证
           labels: ['全代理', '白名单', '黑名单'],
           sheet: false,
-          nodelists: [[], []]
+          nodelists: [[], []],
+          dialog: false,
+          node: ''
         },
         created() {
           this.getData() && ({ ...this.from } = { ...this.getData() })

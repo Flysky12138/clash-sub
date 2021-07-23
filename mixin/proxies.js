@@ -41,24 +41,6 @@ class VmessH2 extends Vmess {
   }
 }
 
-class VmessHttp extends Vmess {
-  constructor(params, host) {
-    super(params)
-    this.common = Object.assign({}, this.common, {
-      udp: true,
-      network: 'http',
-      'http-opts': {
-        method: 'GET',
-        path: [params.path || '/'],
-        headers: {
-          Connection: ['keep-alive']
-        },
-        host: [host]
-      }
-    })
-  }
-}
-
 function template(params, host) {
   let result = null
   switch (params.net) {
@@ -67,9 +49,6 @@ function template(params, host) {
       break
     case 'h2':
       result = new VmessH2(params, host)
-      break
-    case 'tcp':
-      result = new VmessHttp(params, host)
       break
   }
   return result.common
