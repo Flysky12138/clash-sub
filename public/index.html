@@ -150,9 +150,9 @@
                 </v-expansion-panels>
               </v-sheet>
             </v-bottom-sheet>
-            <v-dialog v-model="dialog" max-width="380">
+            <v-dialog v-model="dialog" max-width="420">
               <v-card>
-                <div style="white-space: pre-wrap" class="pa-3">{{node}}</div>
+                <div style="white-space: pre-wrap" class="pa-6">{{JSON.stringify(node, null, '&nbsp;&nbsp;&nbsp;&nbsp;')}}</div>
               </v-card>
             </v-dialog>
           </v-container>
