@@ -17,7 +17,7 @@ app.get('/', function getState(req, res, next) {
 app.get('/nodelists', function (request, response) {
   const queryMap = urlQueryMap(decodeURIComponent(atob(request.url.replace('/nodelists?', ''))))
   let add = queryMap.get('add')
-  add = add === 'null' || add ? '' : add
+  add = add === 'null' || !add ? '' : add
   subArray(queryMap.get('url'), add)
     .then(res => {
       response.send(JSON.stringify(res))
