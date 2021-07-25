@@ -19,7 +19,7 @@ async function subArray(url, add) {
   // vmess节点放入vmessArrayStr数组中
   data.forEach(element => {
     atob(element)
-      .replace(/\s/g, ',')
+      .replace(/\s+/g, ',')
       .split(',')
       .forEach(_element => vmessArrayStr.push(_element))
   })
