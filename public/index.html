@@ -34,7 +34,9 @@
         <v-main>
           <v-container class="mx-auto" :class="{'fill-height': $vuetify.breakpoint.smAndUp}" style="max-width: 700px">
             <v-card outlined rounded="lg">
+              <!-- 标题 -->
               <v-card-title style="width: 100%" class="grey lighten-3">
+                <!-- 左边说明提示 -->
                 <v-menu transition="slide-x-transition" bottom right rounded="lg">
                   <template v-slot:activator="{ on, attrs }">
                     <v-btn icon v-bind="attrs" v-on="on">
@@ -42,6 +44,13 @@
                     </v-btn>
                   </template>
                   <v-list max-width="400">
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title class="mb-2">说明</v-list-item-title>
+                        <v-list-item-subtitle>只支持<strong> Vmess </strong>协议的<strong> ws </strong>和<strong> http </strong>传输方式</v-list-item-subtitle>
+                      </v-list-item-content>
+                    </v-list-item>
+                    <v-divider></v-divider>
                     <v-list-item>
                       <v-list-item-content>
                         <v-list-item-title class="mb-2">普通模式</v-list-item-title>
@@ -59,6 +68,7 @@
                     </v-list-item>
                   </v-list>
                 </v-menu>
+                <!-- 中间Github跳转 -->
                 <a
                   class="text-h4 text-decoration-none font-weight-bold text-uppercase mx-auto success--text"
                   href="https://github.com/Flysky12138/clash-sub"
@@ -66,6 +76,7 @@
                   rel="noopener noreferrer"
                   >clash-sub</a
                 >
+                <!-- 右边模式切换 -->
                 <v-badge :value="bypass" top left overlap color="success" offset-x="-5" content="分流" transition="slide-x-reverse-transition">
                   <v-btn icon @mousedown.prevent="changeMode">
                     <v-icon v-text="bypass ? 'mdi-pinwheel' : 'mdi-pinwheel-outline'"></v-icon>
@@ -73,6 +84,7 @@
                 </v-badge>
               </v-card-title>
               <v-divider class="gray"></v-divider>
+              <!-- 表单 -->
               <v-card-text>
                 <v-form v-model="valid" autocomplete="off">
                   <v-row class="mt-3">
@@ -151,6 +163,7 @@
                 </v-form>
               </v-card-text>
             </v-card>
+            <!-- 底部节点展示 -->
             <v-bottom-sheet v-model="sheet" max-width="676">
               <v-sheet class="overflow-hidden" rounded="t-lg">
                 <v-expansion-panels accordion :value="0">
