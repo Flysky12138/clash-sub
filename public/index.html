@@ -78,7 +78,7 @@
                 >
                 <!-- 右边模式切换 -->
                 <v-badge :value="bypass" top left overlap color="success" offset-x="-5" content="分流" transition="slide-x-reverse-transition">
-                  <v-btn icon @mousedown.prevent="changeMode">
+                  <v-btn icon @mousedown.prevent="bypass = !bypass">
                     <v-icon v-text="bypass ? 'mdi-pinwheel' : 'mdi-pinwheel-outline'"></v-icon>
                   </v-btn>
                 </v-badge>
@@ -205,7 +205,6 @@
           loadingA: false,
           loadingB: false,
           valid: false, // 表单验证
-          labels: ['全代理', '白名单', '黑名单'],
           sheet: false,
           nodelists: [[], []],
           dialog: false,
@@ -233,13 +232,6 @@
               .catch(err => {
                 this.loadingA = false
               })
-          },
-          // 切换模式
-          changeMode() {
-            this.bypass = !this.bypass
-            if (this.from.ruleType === 0) {
-              this.from.ruleType = 1
-            }
           },
           // url=xxx&host=xxx => encodeURI => base64
           getQuery() {
