@@ -135,9 +135,9 @@
                     <v-col cols="12">
                       <v-card outlined rounded="lg">
                         <v-radio-group v-model="from.ruleType" row id="radio-group" dense>
-                          <v-radio label="全代理" v-show="!bypass"></v-radio>
-                          <v-radio label="白名单"></v-radio>
-                          <v-radio label="黑名单"></v-radio>
+                          <v-radio label="全代理" v-show="!bypass" value="0"></v-radio>
+                          <v-radio label="白名单" value="1"></v-radio>
+                          <v-radio label="黑名单" value="2"></v-radio>
                         </v-radio-group>
                       </v-card>
                     </v-col>
