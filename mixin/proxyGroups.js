@@ -27,24 +27,22 @@ function proxyGroups(needlists, otherlists, bypass) {
   return bypass
     ? [
         ...selectBypass,
-        ...proxyGroupsItems
-          .map(res => [
-            {
-              name: `${res[0]}A`,
-              type: res[1],
-              proxies: [...needlists],
-              url: 'http://www.gstatic.com/generate_204',
-              interval: 300
-            },
-            {
-              name: `${res[0]}B`,
-              type: res[1],
-              proxies: [...otherlists],
-              url: 'http://www.gstatic.com/generate_204',
-              interval: 300
-            }
-          ])
-          .flat()
+        ...proxyGroupsItems.flatMap(res => [
+          {
+            name: `${res[0]}A`,
+            type: res[1],
+            proxies: [...needlists],
+            url: 'http://www.gstatic.com/generate_204',
+            interval: 300
+          },
+          {
+            name: `${res[0]}B`,
+            type: res[1],
+            proxies: [...otherlists],
+            url: 'http://www.gstatic.com/generate_204',
+            interval: 300
+          }
+        ])
       ]
     : [
         select,
