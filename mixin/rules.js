@@ -49,7 +49,7 @@ const directProcessNames = Array.from(
   res => `PROCESS-NAME,${res},DIRECT`
 )
 // 公共规则
-const commonRulelists = ['RULE-SET,reject,REJECT', 'RULE-SET,private,DIRECT', 'RULE-SET,lancidr,DIRECT']
+const commonRulelists = ['DOMAIN,clash.razord.top,DIRECT', 'DOMAIN,yacd.haishan.me,DIRECT', 'RULE-SET,private,DIRECT', 'RULE-SET,reject,REJECT']
 
 // 白名单
 // 如你不希望进行 DNS 解析，可在 GEOIP 规则的最后加上，no-resolve，如 GEOIP,CN,DIRECT,no-resolve

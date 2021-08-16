@@ -43,7 +43,7 @@ app.get('/subscribe', function (request, response) {
           bypass: queryMap.has('bypass') ? true : false
         })
         // 发送文件
-        response.send(YAML.stringify(result, null, '  ').replace(/(dns:\n  |proxies:\n  -|proxy-groups:\n  -|rule-providers:\n  |rules:\n  -)/gi, '\n$1'))
+        response.send(YAML.stringify(result, null, '  ').replace(/\n(dns|proxies|proxy-groups|rule-providers|rules):\s+-?/gi, '\n$&'))
       })
       .catch(err => {
         response.send(`<h1 align="center"><br/>订阅下载超时！<br/>${err}</h1>`)
