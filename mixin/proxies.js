@@ -50,6 +50,8 @@ function template(params, host) {
     case 'h2':
       result = new VmessH2(params, host)
       break
+    default:
+      result = new Vmess(params)
   }
   return result.common
 }
