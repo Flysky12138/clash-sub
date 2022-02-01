@@ -19,9 +19,11 @@ class VmessWS extends Vmess {
       udp: true,
       tls: params.tls === 'tls',
       network: 'ws',
-      'ws-path': params.path || '/',
-      'ws-headers': {
-        Host: host
+      'ws-opts': {
+        path: params.path || '/',
+        headers: {
+          Host: host
+        }
       }
     })
   }
