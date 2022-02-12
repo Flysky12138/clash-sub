@@ -2,7 +2,8 @@
 let ruleProviders = {}
 const ruleProvidersItems = {
   domain: ['reject', 'icloud', 'apple', 'google', 'proxy', 'direct', 'private', 'gfw', 'greatfire', 'tld-not-cn'],
-  ipcidr: ['telegramcidr', 'cncidr', 'lancidr']
+  ipcidr: ['telegramcidr', 'cncidr', 'lancidr'],
+  classical: ['applications']
 }
 for (let i in ruleProvidersItems) {
   ruleProvidersItems[i].forEach(res => {
