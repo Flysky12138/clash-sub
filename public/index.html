@@ -169,10 +169,10 @@
                 <v-expansion-panels accordion :value="0">
                   <v-expansion-panel v-for="(items,index) in nodelists">
                     <v-expansion-panel-header expand-icon="mdi-chevron-up"
-                      >{{index ? bypass ? '国外' : '移除' : bypass ? '国内' : '保留'}}的节点名列表（{{items.length}}）</v-expansion-panel-header
+                      >{{index == 1 ? (bypass ? '国外' : '移除') : (bypass ? '国内' : '保留')}}的节点名列表（{{items.length}}）</v-expansion-panel-header
                     >
                     <v-expansion-panel-content>
-                      <v-chip @click.stop="(dialog = true) & (node = item)" color="purple" class="mr-1 mb-3" small link outlined v-for="item in items"
+                      <v-chip @click.stop="dialog = true; node = item" color="purple" class="mr-1 mb-3" small link outlined v-for="item in items"
                         >{{item.ps}}</v-chip
                       >
                     </v-expansion-panel-content>
@@ -224,7 +224,7 @@
               timeout: 5000
             })
               .then(res => {
-                this.nodelists[0] = res.data.filter(res => new RegExp(this.from.filter).test(res.ps))
+                this.nodelists[0] = res.data.filter(res => new RegExp(this.from.filter ?? '').test(res.ps))
                 this.nodelists[1] = res.data.filter(res => !this.nodelists[0].includes(res))
                 this.sheet = true
                 this.loadingA = false
