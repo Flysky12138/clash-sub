@@ -28,7 +28,7 @@
       }
       .v-expansion-panel-content {
         max-height: 50vh;
-        overflow: auto;
+        overflow-y: scroll !important;
       }
     </style>
   </head>
@@ -170,7 +170,7 @@
             <!-- 底部节点展示 -->
             <v-bottom-sheet v-model="sheet" max-width="676">
               <v-sheet class="overflow-hidden" rounded="t-lg">
-                <v-expansion-panels accordion value="0" focusable>
+                <v-expansion-panels accordion :value="0">
                   <v-expansion-panel v-for="(items,index) in nodelists" :key="index">
                     <v-expansion-panel-header expand-icon="mdi-chevron-up"
                       >{{index == 1 ? (bypass ? '国外' : '移除') : (bypass ? '国内' : '保留')}}的节点名列表（{{items.length}}）</v-expansion-panel-header
