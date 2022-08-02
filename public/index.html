@@ -253,7 +253,7 @@
           // 查看节点列表
           nodeLists() {
             this.loading_list = true
-            const query = `url=${this.from.url}&add=${this.from.add}`
+            const query = `url=${this.from.url}&add=${this.from.add || ''}`
             axios({
               url: `${location.origin}/nodelists?${window.btoa(window.encodeURIComponent(query))}`,
               method: 'get',
