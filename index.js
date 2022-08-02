@@ -30,7 +30,7 @@ app.get('/subscribe', function (request, response) {
   const query = decodeURIComponent(atob(request.url.replace('/subscribe?', '')))
   const queryMap = urlQueryMap(query)
   if (queryMap.has('url')) {
-    subArray(queryMap.get('url'), queryMap.has('add') ? queryMap.get('add') : '')
+    subArray(queryMap.get('url'), queryMap.get('add') || '')
       .then(res => {
         // 转换文件
         const result = mixin({
