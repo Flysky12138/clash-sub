@@ -148,15 +148,15 @@
                     <v-col cols="12" class="my-6">
                       <v-row>
                         <v-col cols="6">
-                          <v-btn color="success" block elevation="1" @click="saveData">保存表单内容</v-btn>
+                          <v-btn color="success" block elevation="1" @click="download" :loading="loading_download">下载配置文件</v-btn>
                         </v-col>
                         <v-col cols="6">
-                          <v-btn color="success" block :loading="loadingA" elevation="1" @click="nodeLists" :disabled="!/https?:\/\/\S+/.test(from.url)"
+                          <v-btn color="success" block :loading="loading_list" elevation="1" @click="nodeLists" :disabled="!/https?:\/\/\S+/.test(from.url)"
                             >查看节点列表</v-btn
                           >
                         </v-col>
                         <v-col cols="12" md="6">
-                          <v-btn color="success" block :loading="loadingB" elevation="1" @click="copy" :disabled="!valid">复制订阅地址</v-btn>
+                          <v-btn color="success" block :loading="loading_copy" elevation="1" @click="copy" :disabled="!valid">复制订阅地址</v-btn>
                         </v-col>
                         <v-col cols="12" md="6">
                           <v-btn color="success" block elevation="1" @click="install" :disabled="!valid">导入到 Clash</v-btn>
@@ -206,21 +206,48 @@
             ruleType: 1
           },
           bypass: false, // 分流
-          loadingA: false,
-          loadingB: false,
+          loading_list: false,
+          loading_copy: false,
+          loading_download: false,
           valid: false, // 表单验证
           sheet: false,
           nodelists: [[], []],
           dialog: false,
           node: ''
         },
+        watch: {
+          from: {
+            handler() {
+              this.saveData()
+            },
+            deep: true
+          }
+        },
         created() {
           this.getData() && ({ ...this.from } = { ...this.getData() })
         },
         methods: {
+          // 下载节点文本
+          download() {
+            this.loading_download = true
+            axios({
+              url: this.getUrl(),
+              method: 'get',
+              timeout: 5000
+            })
+              .then(res => {
+                Object.assign(document.createElement('a'), {
+                  download: 'config.yaml',
+                  href: URL.createObjectURL(new Blob([res.data]))
+                }).click()
+              })
+              .finally(() => {
+                this.loading_download = false
+              })
+          },
           // 查看节点列表
           nodeLists() {
-            this.loadingA = true
+            this.loading_list = true
             const query = `url=${this.from.url}&add=${this.from.add}`
             axios({
               url: `${location.origin}/nodelists?${window.btoa(window.encodeURIComponent(query))}`,
@@ -228,23 +255,22 @@
               timeout: 5000
             })
               .then(res => {
-                this.nodelists[0] = res.data.filter(res => new RegExp(this.from.filter ?? '').test(res.ps))
+                this.nodelists[0] = res.data.filter(res => new RegExp(this.from.filter || '').test(res.ps))
                 this.nodelists[1] = res.data.filter(res => !this.nodelists[0].includes(res))
                 this.sheet = true
-                this.loadingA = false
               })
-              .catch(err => {
-                this.loadingA = false
+              .finally(() => {
+                this.loading_list = false
               })
           },
           // url=xxx&host=xxx => encodeURI => base64
-          getQuery() {
+          getUrl() {
             let query = ''
             for (const [key, value] of Object.entries(this.from)) {
               value && (query = `${query}&${key}=${value}`)
             }
             this.bypass && (query = `${query}&bypass=1`)
-            return window.btoa(window.encodeURIComponent(query.replace('&', '')))
+            return `${location.origin}/subscribe?${window.btoa(window.encodeURIComponent(query.replace('&', '')))}`
           },
           // 保存表单到localStorage中
           saveData() {
@@ -257,20 +283,20 @@
           // 复制订阅地址
           copy() {
             const aux = document.createElement('input')
-            aux.setAttribute('value', `${location.origin}/subscribe?${this.getQuery()}`)
+            aux.setAttribute('value', this.getUrl())
             document.body.appendChild(aux)
             aux.select()
             document.execCommand('copy')
             document.body.removeChild(aux)
             // 样式
-            this.loadingB = true
+            this.loading_copy = true
             setTimeout(() => {
-              this.loadingB = false
+              this.loading_copy = false
             }, 800)
           },
           // 导入到Clash
           install() {
-            window.location.href = `clash://install-config?url=${location.origin}/subscribe?${this.getQuery()}`
+            window.location.href = `clash://install-config?url=${this.getUrl()}`
           }
         }
       })
