@@ -13,7 +13,7 @@ const whiteTemplate = (a, b) => [
   `RULE-SET,lancidr,${a}`,
   `RULE-SET,cncidr,${a}`,
   `RULE-SET,telegramcidr,${b}`,
-  `GEOIP,,${a}`,
+  `GEOIP,LAN,${a}`,
   `GEOIP,CN,${a}`,
   `MATCH,${b}`
 ]
