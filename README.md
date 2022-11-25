@@ -10,7 +10,3 @@ cd clash-sub
 yarn
 yarn serve
 ```
-
-### 使用
-
-[`https://clash-sub.vercel.app/`](https://clash-sub.vercel.app/)
