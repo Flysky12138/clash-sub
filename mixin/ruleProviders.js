@@ -10,7 +10,7 @@ for (let i in ruleProvidersItems) {
     ruleProviders[res] = {
       type: 'http',
       behavior: i,
-      url: `https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/${res}.txt`,
+      url: `https://jsd.cdn.zzko.cn/gh/Loyalsoldier/clash-rules@release/${res}.txt`,
       path: `./ruleset/${res}.yaml`,
       interval: 86400
     }
